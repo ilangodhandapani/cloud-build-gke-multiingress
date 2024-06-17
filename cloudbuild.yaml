@@ -20,5 +20,5 @@ steps:
     args:
     - run
     - --filename=gke-resources.yaml
-    - --location=us-central
+    - --location=us-central1
     - --cluster=my-auto-cluster-central
