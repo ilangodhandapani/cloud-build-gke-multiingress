@@ -37,29 +37,3 @@ spec:
             configMapKeyRef:
               name: myapp-cm
               key: PORT
----
-apiVersion: networking.gke.io/v1
-kind: MultiClusterService
-metadata:
-  name: multi-cluster-service
-spec:
-  template:
-    spec:
-      selector:
-        app: myapp-green
-      ports:
-      - name: web
-        protocol: TCP
-        port: 80
-        targetPort: 8080
----
-apiVersion: networking.gke.io/v1
-kind: MultiClusterIngress
-metadata:
-  name: multi-cluster-ingress
-spec:
-  template:
-    spec:
-      backend:
-        serviceName: multi-cluster-service
-        servicePort: 80
