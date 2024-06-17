@@ -1,5 +1,5 @@
 steps:
-  Build app
+  #Build app
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'us-central1-docker.pkg.dev/flawless-lacing-392113/my-app-repo/hello-multi-ingress:latest', '.']
     id: BUILD
@@ -15,3 +15,10 @@ steps:
     - --filename=gke-resources.yaml
     - --location=us-east1
     - --cluster=my-auto-cluster-east
+
+  - name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+    - run
+    - --filename=gke-resources.yaml
+    - --location=us-central
+    - --cluster=my-auto-cluster-central
