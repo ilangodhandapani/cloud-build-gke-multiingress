@@ -15,11 +15,15 @@ func getHomePageHandler(context *gin.Context) {
 func getStatusPageHandler(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"status": "Welcome to status page!"})
 }
+func getErrorPageHandler(context *gin.Context) {
+	context.JSON(http.StatusOK, gin.H{"status": "Welcome to error page!"})
+}
 
 func main() {
 	APP = gin.Default()
 	APP.GET("/", getHomePageHandler)
 	APP.GET("/status", getStatusPageHandler)
+	APP.GET("/error", getErrorPageHandler)
 	if os.Getenv("LCP") == "LOCAL" {
 		APP.Run("localhost:8081")
 	} else {
