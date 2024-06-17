@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-cm
+data:
+  LCP: "QA"
+  PORT: "8080"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-green
+  labels:
+    app: myapp-green
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp-green
+  template:
+    metadata:
+      labels:
+        app: myapp-green
+    spec:
+      containers:
+      - name: myapp-green
+        image: us-central1-docker.pkg.dev/flawless-lacing-392113/my-app-repo/hello-gcp:green
+        env:
+        - name: LCP 
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-cm           
+              key: LCP 
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: myapp-cm
+              key: PORT
+---
+apiVersion: networking.gke.io/v1
+kind: MultiClusterService
+metadata:
+  name: multi-cluster-service
+spec:
+  template:
+    spec:
+      selector:
+        app: myapp-green
+      ports:
+      - name: web
+        protocol: TCP
+        port: 80
+        targetPort: 8080
+---
+apiVersion: networking.gke.io/v1
+kind: MultiClusterIngress
+metadata:
+  name: multi-cluster-ingress
+spec:
+  template:
+    spec:
+      backend:
+        serviceName: multi-cluster-service
+        servicePort: 80
