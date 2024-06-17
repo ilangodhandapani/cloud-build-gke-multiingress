@@ -15,9 +15,3 @@ steps:
     - --filename=gke-resources.yaml
     - --location=us-east1
     - --cluster=my-auto-cluster-east
-  - name: "gcr.io/cloud-builders/gke-deploy"
-    args:
-    - run
-    - --filename=gke-resources.yaml
-    - --location=us-central
-    - --cluster=my-auto-cluster-central
