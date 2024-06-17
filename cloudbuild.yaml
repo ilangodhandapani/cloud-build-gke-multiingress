@@ -13,5 +13,5 @@ steps:
     args:
     - run
     - --filename=gke-resources.yaml
-    - --location=us-east11
+    - --location=us-east1
     - --cluster=my-auto-cluster-east
