@@ -43,45 +43,9 @@ kind: Service
 metadata:
   name: myapp
 spec:
+  type: LoadBalancer
   selector:
-    app: myapp
+    app: myapp-blue
   ports:
   - port: 80
     targetPort: 8080
----
-kind: ServiceExport
-apiVersion: net.gke.io/v1
-metadata:
-  name: myapp
----
-kind: Gateway
-apiVersion: gateway.networking.k8s.io/v1beta1
-metadata:
-  name: external-http
-spec:
-  gatewayClassName: gke-l7-global-external-managed-mc
-  listeners:
-  - name: http
-    protocol: HTTP
-    port: 80
-    allowedRoutes:
-      kinds:
-      - kind: HTTPRoute
----
-kind: HTTPRoute
-apiVersion: gateway.networking.k8s.io/v1beta1
-metadata:
-  name: public-store-route
-  labels:
-    gateway: external-http
-spec:
-  hostnames:
-  - "store.example.com"
-  parentRefs:
-  - name: external-http
-  rules:
-  - backendRefs:
-    - group: net.gke.io
-      kind: ServiceImport
-      name: myapp
-      port: 80
