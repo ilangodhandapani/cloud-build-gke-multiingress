@@ -46,7 +46,7 @@ spec:
   selector:
     app: myapp
   ports:
-  - port: 80 
+  - port: 8080 
     targetPort: 8080
 ---
 kind: ServiceExport
@@ -84,4 +84,4 @@ spec:
     - group: net.gke.io
       kind: ServiceImport
       name: myapp
-      port: 80
+      port: 8080
