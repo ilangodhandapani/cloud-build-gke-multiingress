@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: us-central1-docker.pkg.dev/flawless-lacing-392113/my-app-repo/hello-multi-ingress:latest
+        image: us-east1-docker.pkg.dev/flawless-lacing-392113/my-app-repo/my-app-go:latest
         env:
         - name: LCP 
           valueFrom:
@@ -37,3 +37,51 @@ spec:
             configMapKeyRef:
               name: myapp-cm
               key: PORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+spec:
+  selector:
+    app: myapp
+  ports:
+  - port: 80 
+    targetPort: 8080
+---
+kind: ServiceExport
+apiVersion: net.gke.io/v1
+metadata:
+  name: myapp
+---
+kind: Gateway
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: external-http
+spec:
+  gatewayClassName: gke-l7-global-external-managed-mc
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 80
+    allowedRoutes:
+      kinds:
+      - kind: HTTPRoute
+---
+kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1beta1
+metadata:
+  name: public-store-route
+  labels:
+    gateway: external-http
+spec:
+  hostnames:
+  - "store.example.com"
+  parentRefs:
+  - name: external-http
+  rules:
+  - backendRefs:
+    - group: net.gke.io
+      kind: ServiceImport
+      name: myapp
+      port: 80

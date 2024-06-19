@@ -1,13 +1,13 @@
 steps:
   #Build app
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'us-central1-docker.pkg.dev/flawless-lacing-392113/my-app-repo/hello-multi-ingress:latest', '.']
-    id: BUILD
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['build', '-t', 'us-central1-docker.pkg.dev/flawless-lacing-392113/my-app-repo/hello-multi-ingress:latest', '.']
+  #   id: BUILD
 
-  # Storage of the image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/flawless-lacing-392113/my-app-repo/hello-multi-ingress:latest']
-    id: STORAGE
+  # # Storage of the image
+  # - name: 'gcr.io/cloud-builders/docker'
+  #   args: ['push', 'us-central1-docker.pkg.dev/flawless-lacing-392113/my-app-repo/hello-multi-ingress:latest']
+  #   id: STORAGE
 
   - name: "gcr.io/cloud-builders/gke-deploy"
     args:
@@ -18,11 +18,11 @@ steps:
     - --output=./east-output
     id: east-deploy
 
-  - name: "gcr.io/cloud-builders/gke-deploy"
-    args:
-    - run
-    - --filename=gke-resources.yaml
-    - --location=us-central1
-    - --cluster=my-auto-cluster-central
-    - --output=./central-output
-    id: central-deploy
+  # - name: "gcr.io/cloud-builders/gke-deploy"
+  #   args:
+  #   - run
+  #   - --filename=gke-resources.yaml
+  #   - --location=us-central1
+  #   - --cluster=my-auto-cluster-central
+  #   - --output=./central-output
+  #   id: central-deploy
